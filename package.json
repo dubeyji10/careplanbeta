@@ -1,0 +1,19 @@
+{
+  "name": "care-plan-frontend-2",
+  "version": "2.0.0",
+  "description": "- modifying flow of auth and adding branded templates -",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "dubeya@naomedical.com",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.5",
+    "body-parser": "^1.20.2",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2"
+  }
+}

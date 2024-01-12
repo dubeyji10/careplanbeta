@@ -1,0 +1,21 @@
+{
+    "_id": {
+        "$oid": "658d842f88260c6f617e0501"
+    },
+    "Patient Acct No": "106156",
+    "Patient First Name": "DELIA",
+    "Patient Last Name": "BERRY",
+    "Patient Name": "BERRY, DELIA ",
+    "Patient Home Phone": "718-783-4935",
+    "Patient E-mail": "neeedsssemail@gmail.com",
+    "Patient DOB": {
+        "$date": {
+            "$numberLong": "-326505600000"
+        }
+    },
+    "Encounter ID": [
+        "3891511"
+    ],
+    "Patient DOB String": "1959-08-28",
+    "Token": "qxxfrGU_"
+}

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>This is A Dummy Care Plan</title>
+    <!-- removed custom styles using bootstrap only -->
+
+    <!-- <link rel="stylesheet" href="/styles/carePlanModal.css">
+    <link rel="stylesheet" href="/styles/carePlanStyles.css"> -->
+
+        <!-- Add these lines to the head section of your HTML file -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="/styles/carePlanNewStyle.css">
+
+</head>
+
+<body>
+
+    <% let carePlanJson = JSON.parse(apiResponse) %>
+    <% if (carePlanJson.inserted) { %>
+        <!-- render care plan -->
+        <div class="col-md-6 offset-md-3 text-center padClass">
+        <div id="logo-container" class="logocontainer">
+            <img src="https://naomedical.com/wp-content/themes/naomedical_theme/assets/images/naoMedicalLogo.svg"
+                alt="Nao Medical Logo" id="logo">
+            <h3> Welcome </h3>
+        </div>
+        <div class="care-plan">
+            <div id="patientAcctNo">  Patient Acct No :     <%= carePlanJson['message']['Patient Acct No'] %>        </div>
+            <%  let patientRiskList = carePlanJson['message']['patientConditions']['risks'] 
+                let riskDetails = carePlanJson['message']['conditionsDetails']; %>
+                <!-- script in loop ??? -->
+                <script>
+                    function toTitleCase(str) {
+                        return str.replace(
+                            /\w\S*/g,
+                            function(txt) {
+                            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+                            }
+                        );
+                    }
+                    // const modalDiv = document.querySelector("#riskModalDiv");
+                    function openModal(riskArgument) {
+                            console.log('1.  current id requested ->>>',riskArgument);
+
+                            // var modal = document.getElementById('riskModalDiv');
+                            // console.log(' to modify this modal below : ',modal);
+
+                            console.log('- risk argument : ',riskArgument);
+                            // Find the modal and populate it
+                            var risk = riskArgument.split('_').join(' ');
+                            // patientRiskList[i]
+                            console.log('- risk value : ',risk);
+
+                            const jsonDataFromServer = <%- JSON.stringify(JSON.parse(apiResponse)) %>;
+                            
+                            var modal = document.getElementById('riskModalDiv');
+
+                            var conditions = jsonDataFromServer['message']['conditionsDetails'][risk];
+                            console.log('--->>> add these key-value pair in modal : ',conditions);
+
+                            // add modalTitle as current clicked risk
+                            // add 5 year risk
+                            // document.getElementById('modalTitle').innerText = toTitleCase(risk);
+                            
+                            // also add to header-title
+                            document.getElementById('header-title').innerText = toTitleCase(risk);
+
+                            var riskYear5 = conditions['5 Year Risk'];
+                            // not div but use h3
+                            var riskYear5Div = document.createElement('h3');
+                            riskYear5Div.id = 'year-risk';
+                            // Set the content for the additional div
+                            riskYear5Div.textContent = '5 Year Risk : ' + riskYear5;
+                            // append child to modal-content-details
+                            var modalContentDetails = document.getElementById('modal-content-details');
+                            modalContentDetails.appendChild(riskYear5Div);
+                            // now iterate through keys and add items 
+                            for (var key in conditions) {
+                                if (key !== "5 Year Risk") {
+                                    console.log(" Adding Items for Key  :",key);
+                                    var subCondition = document.createElement('div');
+                                    subCondition.className = 'sub-condition';
+                                    subCondition.textContent = "-> "+key+" <-";
+                                    modalContentDetails.appendChild(subCondition);
+
+                                    var why = document.createElement('div');
+                                    why.className = 'why-class';
+                                    why.textContent = conditions[key]["why"];
+                                    modalContentDetails.appendChild(why);
+
+                                    var msg = document.createElement('div');
+                                    msg.className = 'msg-class';
+                                    msg.textContent = conditions[key]["msg"];
+                                    modalContentDetails.appendChild(msg);
+
+                                    var service = document.createElement('div');
+                                    service.className = 'service-class';
+                                    //
+                                    service.textContent =  "Enroll Into Our "+conditions[key]["service"]+" Program";
+                                    modalContentDetails.appendChild(service);
+                                    // Add a horizontal line after each sub-condition
+                                    var hr = document.createElement('hr');
+                                    modalContentDetails.appendChild(hr);
+
+                                }
+                            }
+
+                            if(modal){
+                                console.log('-----------------------------------------------------------------');
+                                console.log('-> modal populated with data <-');
+                                console.log('-----------------------------------------------------------------');
+                                modal.style.display = "block";
+                            }
+                            else{
+                                console.log('-- sorry modal is not loaded --- ');
+                                document.getElementsByTagName('body')[0].style.backgroundColor = 'green';
+                            }
+                        }
+    
+                        function closeModal() {
+                            console.log("-- closing modal ---");
+                            console.log("-- reset modal-content-details ---");
+                            var modal = document.getElementById('riskModalDiv');
+                            // also remove all appended child on close of modal -----------
+                            document.getElementById('modal-content-details').innerHTML = '';
+                            modal.style.display = "none";
+                    }
+
+                    // Close the modal if the user clicks outside of it
+                    window.onclick = function(event) {
+                        var modal = document.getElementById('riskModalDiv');
+                        if (event.target == modal) {
+                            // trigger closeModal again;
+                            closeModal();
+
+                            // modal.style.display = "none";
+                        }
+                    }
+
+                   
+                </script>
+                <!-- srcipt in loop ?? ends -->
+            <div class="col text-center">
+                    <% for(let i=0;i<patientRiskList.length;i+=1) { let currentModalId = patientRiskList[i].split(' ').join('_'); let divColor = 'risk-level-'+riskDetails[patientRiskList[i]]['5 Year Risk'].toLowerCase();  %>
+                        <div class="card-body risk-card-item-size <%= divColor %>">
+                            <button class="btn btn-primary w-100  <%= divColor %>" onclick="openModal('<%= currentModalId %>')"> 
+                                You are at risk of <%= patientRiskList[i] %> 
+                                <br><div class="info info-text"> (CLICK TO VIEW IN DETAIL) </div>
+                            </button>
+                        </div>
+                    <% } %>
+            </div>
+
+
+            <!-- Your simplified modal structure -->
+            <div class="modal" id="riskModalDiv" tabindex="-1" role="dialog">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div id="header-title"></div>
+                        <button onclick="closeModal()" type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                    <!-- Content goes here -->
+                        <div id="modalTitle"></div>
+                        <div id="modal-content-details"></div>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+        </div>
+        </div>
+
+    <% } else { %>
+        <div><strong>SORRY COULD NOT GENERATE YOUR CARE PLAN</strong></div>
+    <% } %>
+
+
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+.modal {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    /* padding: 20px; */
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-content {
+    text-align: center;
+}
+
+#processing-modal {
+    background-color: inherit;
+    /* width: 200px; */
+    /* width: 100%; */
+    /* height: 100%; */
+    /* Adjust the width as needed */
+}
+
+#result-modal {
+    width: 300px;
+    /* Adjust the width as needed */
+}
